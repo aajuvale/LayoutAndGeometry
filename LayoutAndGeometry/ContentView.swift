@@ -7,34 +7,57 @@
 
 import SwiftUI
 
+struct OuterView: View {
+    var body: some View {
+        VStack {
+            Text("Top")
+
+            InnerView()
+                .background(.green)
+
+            Text("Bottom")
+        }
+    }
+}
+
+struct InnerView: View {
+    var body: some View {
+        HStack {
+            Text("Left")
+
+            GeometryReader { proxy in
+                Text("Center")
+                    .background(.blue)
+                    .onTapGesture {
+                        print("Global center: \(proxy.frame(in: .global).midX) x  \(proxy.frame(in: .global).midY)")
+                        print("Custom center: \(proxy.frame(in: .named("Custom")).midX) x  \(proxy.frame(in: .named("Custom")).midY)")
+                        print("Global center: \(proxy.frame(in: .local).midX) x  \(proxy.frame(in: .local).midY)")
+                    }
+            }
+            .background(.orange)
+
+            Text("Right")
+        }
+    }
+}
+
 struct ContentView: View {
     var body: some View {
-//        GeometryReader { proxy in
-//            Image(.example)
-//                .resizable()
-//                .scaledToFit()
-//                .frame(width: proxy.size.width * 0.8, height: 300)
+        OuterView()
+            .background(.red)
+            .coordinateSpace(name: "Custom")
+
+//        VStack {
+//            GeometryReader { proxy in
+//                Text("Hello, world!")
+//                    .frame(width: proxy.size.width * 0.9)
+//                    .background(.red)
+//            }
+//            .background(.green)
+//
+//            Text("More text")
+//                .background(.blue)
 //        }
-
-        HStack {
-            Text("IMPORTANT")
-                .frame(width: 200)
-                .background(.blue)
-
-//            Image(.example)
-//                .resizable()
-//                .scaledToFit()
-//                .containerRelativeFrame(.horizontal) { size, axis in
-//                    size * 0.8
-//                }
-            GeometryReader { proxy in
-                Image(.example)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: proxy.size.width * 0.8)
-                    .frame(width: proxy.size.width, height: proxy.size.height)
-            }
-        }
     }
 }
 
